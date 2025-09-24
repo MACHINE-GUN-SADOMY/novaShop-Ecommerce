@@ -6,42 +6,32 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.novasho_ecommerce.ui.theme.NovaShoEcommerceTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
-            NovaShoEcommerceTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+            MaterialTheme {
+
+                // Lista de Productos para probar
+                val mockProducts = listOf(
+                    Product(1, "Camiseta", 12000.0),
+                    Product(2,"Pantalon", 6000.0),
+                    Product(3,"Zapatillas", 15000.0))
+
+                // Preview del Screen con sus parametros
+                CatalogScreen(
+                    products = mockProducts,
+                    onAddToCart = {},
+                    onGoToCart = {}
+                )
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    NovaShoEcommerceTheme {
-        Greeting("Android")
     }
 }
