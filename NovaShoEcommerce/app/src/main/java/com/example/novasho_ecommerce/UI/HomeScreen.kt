@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 fun HomeScreen(
     onGoCatalog: () -> Unit,
     onGoCart: () -> Unit,
-    // onGoCheckout: () -> Unit,
     onGoOrders: () -> Unit)
 {
     Column(Modifier.padding(16.dp)){
@@ -45,7 +44,6 @@ fun HomeScreenPreview(){
             onGoCatalog = {},
             onGoCart = {},
             onGoOrders = {},
-            // onGoCheckout = {}
         )
     }
 }
