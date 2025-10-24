@@ -11,6 +11,8 @@
           <set>
             <option value="$PROJECT_DIR$/NovaShoEcommerce" />
             <option value="$PROJECT_DIR$/NovaShoEcommerce/app" />
+            <option value="$PROJECT_DIR$/NovaShoEcommerce/core" />
+            <option value="$PROJECT_DIR$/NovaShoEcommerce/ui" />
           </set>
         </option>
       </GradleProjectSettings>

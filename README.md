@@ -1,66 +1,74 @@
-📱 NovaShop – Proyecto Semestral (MVVM + Jetpack Compose)
+# 🛍️ NovaShop – E-Commerce App
 
-Aplicación móvil de e-commerce en memoria desarrollada en Kotlin con Android Studio.
-Permite gestionar un catálogo de productos (CRUD), administrar un carrito de compras, simular pagos y generar órdenes durante la sesión.
+**NovaShop** es una aplicación de comercio electrónico desarrollada en **Kotlin con Jetpack Compose**, siguiendo la arquitectura **MVVM** y el patrón **Repository**.  
+El proyecto permite visualizar un catálogo de productos, agregar ítems al carrito, gestionar un flujo de checkout con validación de dirección y registrar órdenes con detalle de envío.
 
-El proyecto aplica el patrón MVVM, utiliza Jetpack Compose para la interfaz de usuario y fomenta el trabajo colaborativo con GitHub y Trello.
+---
 
-✨ Funcionalidades principales
+## 🚀 Características principales
 
-CRUD de productos (crear, editar, eliminar, listar).
+- 📦 **Catálogo dinámico:** lista de productos con opción de búsqueda y filtrado.  
+- 🛒 **Carrito de compras:** agrega, elimina y calcula totales automáticamente.  
+- 💳 **Checkout con formulario:** solicita dirección, comuna, ciudad y región.  
+- 📋 **Órdenes generadas:** lista de pedidos confirmados con fecha, monto y datos de envío.  
+- 🧩 **Arquitectura MVVM + Repository:** separación clara entre capa UI, lógica y datos.  
+- 🧱 **Compose Material 3:** interfaz moderna y adaptable.
 
-Catálogo con visualización y detalle de productos.
+---
 
-Carrito de compras con subtotal, IVA y total.
+## 🧠 Arquitectura del proyecto
+com.example.nova_shop_ecommerce
+├── Model/
+│ ├── Product.kt
+│ ├── CartItem.kt
+│ ├── Order.kt
+│ └── ShippingInfo.kt
+├── Repository/
+│ ├── CatalogRepository.kt
+│ ├── CartRepository.kt
+│ └── OrdersRepository.kt
+├── ViewModel/
+│ ├── CatalogViewModel.kt
+│ ├── CartViewModel.kt
+│ └── OrdersViewModel.kt
+├── UI/
+│ ├── HomeScreen.kt
+│ ├── Catalog/
+│ │ └── CatalogView.kt
+│ ├── Cart/
+│ │ └── CartView.kt
+│ ├── Checkout/
+│ │ └── CheckoutView.kt
+│ └── Order/
+│ └── 	OrdersView.kt
+└── MainActivity.kt
 
-Simulación de pago con generación de órdenes (pendiente, aprobado o rechazado).
+yaml
+Copiar código
 
-Historial de órdenes durante la ejecución de la app (en memoria).
+---
 
-⚙️ Tecnologías
+## 🛠️ Tecnologías utilizadas
 
-Kotlin
+- **Lenguaje:** Kotlin  
+- **Framework UI:** Jetpack Compose (Material 3)  
+- **Arquitectura:** MVVM + Repository Pattern  
+- **Gestión de estado:** StateFlow / MutableStateFlow  
+- **Navegación:** Navigation Compose  
+- **IDE:** Android Studio Giraffe+
 
-Android Studio (Empty Compose Activity adaptado)
+---
 
-Jetpack Compose (UI declarativa)
+## 🧾 Autor
 
-MVVM (ViewModel + Repository + UI)
+**Cristian Parra Hernández**  
+📚 Asignatura: *Desarrollo de Aplicaciones Móviles*  
+🏫 DuocUC – Sección 010V  
+👨‍🏫 Docente: *Luis David Becerra Uribe*  
 
-GitHub (control de versiones)
+---
 
-Trello (planificación de tareas)
+## 📂 Repositorio
 
-🚀 Instalación y ejecución
-
-Clonar el repositorio:
-
-git clone https://github.com/tuusuario/NovaShoEcommerce_GrupoX.git
-
-
-Abrir el proyecto en Android Studio (versión Koala+ o más reciente).
-
-Sincronizar dependencias con Gradle.
-
-Ejecutar la app en un emulador o dispositivo físico con Android 7.0+ (API 24).
-
-📂 Estructura de carpetas (core único)
-com.example.novasho_ecommerce / main
-│
-├─ model/        
-├─ repository/   
-├─ viewmodel/    
-├─ ui/          
-└─ util/         
-
-👥 Equipo
-
-Proyecto desarrollado en parejas como parte de la asignatura DSY1105 – Desarrollo de Aplicaciones Móviles.
-
-📌 Colaboración
-
-GitHub: commits frecuentes con mensajes claros.
-
-Trello: tablero con listas Por hacer, En curso y Finalizado.
-
-Inicio de proyecto + estructura base MVVM (Compose + Kotlin)
+> 💡 [GitHub – NovaShop E-Commerce](https://github.com/usuario/NovaShop)  
+> _(Reemplaza “usuario” por tu nombre de usuario real en GitHub)_
