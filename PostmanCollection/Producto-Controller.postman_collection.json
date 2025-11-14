@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"nombre\": \"Polera NovaShop 2\",\r\n  \"descripcion\": \"Polera negra talla XL\",\r\n  \"precio\": 12990,\r\n  \"stock\": 20,\r\n  \"categoriaId\": 1\r\n}\r\n",
+					"raw": "{\r\n  \"nombre\": \"Polera NovaShop por Admin\",\r\n  \"descripcion\": \"Polera negra talla XL\",\r\n  \"precio\": 12990,\r\n  \"stock\": 20,\r\n  \"categoriaId\": 1\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -21,7 +21,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/api/productos",
+					"raw": "http://localhost:8081/api/productos/crear?userId=1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -29,7 +29,14 @@
 					"port": "8081",
 					"path": [
 						"api",
-						"productos"
+						"productos",
+						"crear"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "1"
+						}
 					]
 				}
 			},
@@ -85,7 +92,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/api/productos/1",
+					"raw": "http://localhost:8081/api/productos/3",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -94,7 +101,7 @@
 					"path": [
 						"api",
 						"productos",
-						"1"
+						"3"
 					]
 				}
 			},
@@ -115,7 +122,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/api/productos/1",
+					"raw": "http://localhost:8081/api/productos/actualizar/2?userId=1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -124,7 +131,14 @@
 					"path": [
 						"api",
 						"productos",
-						"1"
+						"actualizar",
+						"2"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "1"
+						}
 					]
 				}
 			},
@@ -145,7 +159,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/api/productos/1",
+					"raw": "http://localhost:8081/api/productos/delete/2?userId=1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -154,7 +168,14 @@
 					"path": [
 						"api",
 						"productos",
-						"1"
+						"delete",
+						"2"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "1"
+						}
 					]
 				}
 			},

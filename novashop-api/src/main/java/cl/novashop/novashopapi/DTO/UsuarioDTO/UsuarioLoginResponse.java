@@ -5,9 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @NoArgsConstructor
-@AllArgsConstructor
-public class UsuarioLoginRequest {
-    private String email;
-    private String password;
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+public class UsuarioLoginResponse {
+    private String message;
+    private UsuarioResponse user;
 }

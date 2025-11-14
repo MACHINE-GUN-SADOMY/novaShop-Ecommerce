@@ -1,8 +1,6 @@
 package cl.novashop.novashopapi.Controller;
 
-import cl.novashop.novashopapi.DTO.UsuarioDTO.UsuarioLoginRequest;
-import cl.novashop.novashopapi.DTO.UsuarioDTO.UsuarioRegistroRequest;
-import cl.novashop.novashopapi.DTO.UsuarioDTO.UsuarioRegistroResponse;
+import cl.novashop.novashopapi.DTO.UsuarioDTO.*;
 import cl.novashop.novashopapi.Model.UsuarioJpa;
 import cl.novashop.novashopapi.Service.UsuarioService;
 import org.springframework.http.HttpStatus;
@@ -21,28 +19,25 @@ public class AuthController {
         this.usuarioService = usuarioService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<UsuarioRegistroResponse> registrar(@RequestBody UsuarioRegistroRequest request) {
-        UsuarioRegistroResponse respuesta = usuarioService.registrarUsuario(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
+    @PostMapping("/login")
+    public ResponseEntity<UsuarioLoginResponse> login(@RequestBody UsuarioLoginRequest request) {
+        try {
+            UsuarioLoginResponse response = usuarioService.login(request);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(401).body(new UsuarioLoginResponse(e.getMessage(), null));
+        }
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<UsuarioRegistroResponse> login(@RequestBody UsuarioLoginRequest request) {
-        Optional<UsuarioJpa> usuarioOpt = usuarioService.login(request);
+    @PostMapping("/register")
+    public ResponseEntity<UsuarioResponse> registrar(@RequestBody UsuarioJpa usuario) {
+        UsuarioResponse creado = usuarioService.registrarUsuario(usuario);
+        return ResponseEntity.ok(creado);
+    }
 
-        if (usuarioOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        UsuarioJpa usuarioJpa = usuarioOpt.get();
-        UsuarioRegistroResponse resp = new UsuarioRegistroResponse(
-                usuarioJpa.getId(),
-                usuarioJpa.getNombre(),
-                usuarioJpa.getEmail(),
-                usuarioJpa.getFechaCre()
-        );
-
-        return ResponseEntity.ok(resp);
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioResponse> obtenerPorId(@PathVariable Long id) {
+        UsuarioResponse encontrado = usuarioService.buscarUsuarioPorId(id);
+        return ResponseEntity.ok(encontrado);
     }
 }

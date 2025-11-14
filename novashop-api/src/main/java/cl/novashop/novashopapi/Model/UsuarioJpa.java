@@ -19,9 +19,13 @@ public class UsuarioJpa {
 
     private String email;
 
-    @Column(name = "pasword") // columna escrita así en la BD
+    @Column(name = "pasword")
     private String password;
 
     @Column(name = "fecha_cre")
     private LocalDateTime fechaCre;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "rol", nullable = false)
+    private RolUsuario rol;
 }

@@ -12,7 +12,4 @@ import java.time.LocalDateTime;
 public class UsuarioRegistroResponse {
     public String email;
     public String password;
-
-    public UsuarioRegistroResponse(Long id, String nombre, String email, LocalDateTime fechaCre) {
-    }
 }

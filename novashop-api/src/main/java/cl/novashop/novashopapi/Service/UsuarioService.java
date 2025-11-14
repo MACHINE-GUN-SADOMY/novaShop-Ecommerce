@@ -1,38 +1,69 @@
 package cl.novashop.novashopapi.Service;
 
 import cl.novashop.novashopapi.DTO.UsuarioDTO.UsuarioLoginRequest;
-import cl.novashop.novashopapi.DTO.UsuarioDTO.UsuarioRegistroRequest;
-import cl.novashop.novashopapi.DTO.UsuarioDTO.UsuarioRegistroResponse;
+import cl.novashop.novashopapi.DTO.UsuarioDTO.UsuarioLoginResponse;
+import cl.novashop.novashopapi.DTO.UsuarioDTO.UsuarioResponse;
+import cl.novashop.novashopapi.Model.RolUsuario;
 import cl.novashop.novashopapi.Model.UsuarioJpa;
 import cl.novashop.novashopapi.Repository.UsuarioJpaRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.*;
 
-import java.time     .LocalDateTime;
 import java.util.Optional;
 
-@Service @AllArgsConstructor
+@Service @RequiredArgsConstructor
 public class UsuarioService {
     private final UsuarioJpaRepository usuarioJpaRepository;
 
-    public UsuarioRegistroResponse registrarUsuario(UsuarioRegistroRequest usuarioRegistroRequest) {
-        UsuarioJpa usuario = new UsuarioJpa();
-        usuario.setNombre(usuarioRegistroRequest.getNombre());
-        usuario.setEmail(usuarioRegistroRequest.getEmail());
-        usuario.setPassword(usuarioRegistroRequest.getPassword());
-        usuario.setFechaCre(LocalDateTime.now());
+    public void validarAdmin(Long userId) {
+        UsuarioResponse usuario = this.buscarUsuarioPorId(userId);
+        if (!usuario.getRol().equals(RolUsuario.ADMIN)) {
+            throw new RuntimeException("Acceso denegado. Solo ADMIN.");
+        }
+    }
 
-        UsuarioJpa usuarioGuardado = usuarioJpaRepository.save(usuario);
+    public UsuarioLoginResponse login(UsuarioLoginRequest request) {
 
-        return new UsuarioRegistroResponse(
-                usuarioGuardado.getId(),
-                usuarioGuardado.getNombre(),
-                usuarioGuardado.getEmail(),
-                usuarioGuardado.getFechaCre()
+        UsuarioJpa usuario = usuarioJpaRepository
+                .findByEmailAndPassword(request.getEmail(), request.getPassword())
+                .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
+
+        UsuarioResponse dto = new UsuarioResponse(
+                usuario.getId(),
+                usuario.getNombre(),
+                usuario.getEmail(),
+                usuario.getRol()
+        );
+
+        return new UsuarioLoginResponse("Login exitoso", dto);
+    }
+
+    public UsuarioResponse registrarUsuario(UsuarioJpa usuario) {
+        if (usuario.getRol() == null) {
+            usuario.setRol(RolUsuario.CUSTOMER);
+        }
+
+        UsuarioJpa guardado = usuarioJpaRepository.save(usuario);
+
+        return new UsuarioResponse(
+                guardado.getId(),
+                guardado.getNombre(),
+                guardado.getEmail(),
+                guardado.getRol()
         );
     }
 
-    public Optional<UsuarioJpa> login(UsuarioLoginRequest usuarioLoginRequest) {
-        return usuarioJpaRepository.login(usuarioLoginRequest.getEmail(), usuarioLoginRequest.getPassword());
+    public UsuarioResponse buscarUsuarioPorId(Long id) {
+
+        UsuarioJpa usuario = usuarioJpaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+
+        return new UsuarioResponse(
+                usuario.getId(),
+                usuario.getNombre(),
+                usuario.getEmail(),
+                usuario.getRol()
+        );
     }
 }
