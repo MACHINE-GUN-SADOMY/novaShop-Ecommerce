@@ -1,74 +1,164 @@
-# 🛍️ NovaShop – E-Commerce App
-
-**NovaShop** es una aplicación de comercio electrónico desarrollada en **Kotlin con Jetpack Compose**, siguiendo la arquitectura **MVVM** y el patrón **Repository**.  
-El proyecto permite visualizar un catálogo de productos, agregar ítems al carrito, gestionar un flujo de checkout con validación de dirección y registrar órdenes con detalle de envío.
+# 🛍️ NovaShop — API + Aplicación Móvil  
+**Proyecto académico integrado — Backend en Spring Boot + MySQL & App Móvil Android con Kotlin/Compose**
 
 ---
 
-## 🚀 Características principales
+# 📌 **Síntesis del Proyecto**
 
-- 📦 **Catálogo dinámico:** lista de productos con opción de búsqueda y filtrado.  
-- 🛒 **Carrito de compras:** agrega, elimina y calcula totales automáticamente.  
-- 💳 **Checkout con formulario:** solicita dirección, comuna, ciudad y región.  
-- 📋 **Órdenes generadas:** lista de pedidos confirmados con fecha, monto y datos de envío.  
-- 🧩 **Arquitectura MVVM + Repository:** separación clara entre capa UI, lógica y datos.  
-- 🧱 **Compose Material 3:** interfaz moderna y adaptable.
+**NovaShop** es un sistema completo de comercio electrónico desarrollado como proyecto para la asignatura **Desarrollo de Aplicaciones Móviles**.  
+Incluye:
 
----
+### 🔹 **Una API REST en Spring Boot + MySQL**  
+Encargada de manejar usuarios, productos, carrito, pedidos y la lógica de negocio.
 
-## 🧠 Arquitectura del proyecto
-com.example.nova_shop_ecommerce
-├── Model/
-│ ├── Product.kt
-│ ├── CartItem.kt
-│ ├── Order.kt
-│ └── ShippingInfo.kt
-├── Repository/
-│ ├── CatalogRepository.kt
-│ ├── CartRepository.kt
-│ └── OrdersRepository.kt
-├── ViewModel/
-│ ├── CatalogViewModel.kt
-│ ├── CartViewModel.kt
-│ └── OrdersViewModel.kt
-├── UI/
-│ ├── HomeScreen.kt
-│ ├── Catalog/
-│ │ └── CatalogView.kt
-│ ├── Cart/
-│ │ └── CartView.kt
-│ ├── Checkout/
-│ │ └── CheckoutView.kt
-│ └── Order/
-│ └── 	OrdersView.kt
-└── MainActivity.kt
+### 🔹 **Una aplicación móvil Android creada con Kotlin + Jetpack Compose**  
+Permite a los usuarios navegar por el catálogo, administrar su carrito, realizar compras y visualizar sus pedidos.
 
-yaml
-Copiar código
+El objetivo del proyecto es demostrar una correcta integración entre las capas **frontend móvil**, **backend**, y **base de datos**, aplicando buenas prácticas de arquitectura como **MVVM**, **Repository Pattern**, y diseño limpio de API REST.
 
 ---
 
-## 🛠️ Tecnologías utilizadas
+# 🏛️ Arquitectura del Sistema
 
-- **Lenguaje:** Kotlin  
-- **Framework UI:** Jetpack Compose (Material 3)  
-- **Arquitectura:** MVVM + Repository Pattern  
-- **Gestión de estado:** StateFlow / MutableStateFlow  
-- **Navegación:** Navigation Compose  
-- **IDE:** Android Studio Giraffe+
+El sistema está divido en 3 capas principales:
+
+```
+┌─────────────────────────────────────┐
+│             APP MÓVIL               │
+│ Kotlin + Compose (MVVM + Repo)      │
+│ Pantallas: Login, Home, Productos,  │
+│ Detalles, Carrito, Checkout, Pedidos│
+└─────────────────────────────────────┘
+                 │
+                 ▼  (JSON / Retrofit)
+┌─────────────────────────────────────┐
+│             API REST                │
+│ Java 21 – Spring Boot – JPA         │
+│ Controladores, Servicios, Repos     │
+│ Lógica de negocio y validaciones    │
+└─────────────────────────────────────┘
+                 │
+                 ▼ (SQL)
+┌─────────────────────────────────────┐
+│          BASE DE DATOS              │
+│ MySQL – Tablas normalizadas         │
+│ Usuarios, Productos, Carritos,      │
+│ Items, Pedidos, ItemsPedido         │
+└─────────────────────────────────────┘
+```
 
 ---
 
-## 🧾 Autor
+# 🚀 **Características de la API (Backend)**
 
+### ✔ Autenticación básica
+- Registro  
+- Login  
+- Retorno de datos del usuario
+
+### ✔ CRUD de Productos  
+- Crear  
+- Actualizar  
+- Listar  
+- Eliminar  
+
+### ✔ Carrito de Compras (FULL funcional)
+Incluye:
+- Crear carrito automáticamente si no existe
+- Agregar productos
+- Actualizar cantidad
+- Eliminar item
+- Vaciar carrito completo
+- Obtener carrito con totales calculados
+
+### Endpoints del carrito
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/carrito/{usuarioId}` | Obtiene o crea el carrito activo |
+| POST | `/api/carrito/items` | Agrega un producto |
+| PUT | `/api/carrito/items/{itemId}` | Modifica cantidad |
+| DELETE | `/api/carrito/items/{itemId}` | Elimina item |
+| DELETE | `/api/carrito/{carritoId}` | Vacía todo el carrito |
+
+---
+
+# 🛠️ **Tecnologías del Backend (API)**
+
+- ☕ Java 21  
+- 🚀 Spring Boot 3  
+- 🗄️ MySQL  
+- 🔗 JPA/Hibernate  
+- 🧪 Postman para pruebas  
+- 📁 Arquitectura por capas (Controller, Service, Repository, Model, DTO)
+
+---
+
+# 📱 **Características de la Aplicación Móvil**
+
+### ✔ Catálogo dinámico  
+- Lista de productos desde la API  
+- Búsqueda y filtros  
+- Imágenes y detalles
+
+### ✔ Carrito de compras (totalmente integrado)
+- Agregar productos  
+- Modificar cantidad  
+- Eliminar items  
+- Vaciar carrito  
+- Total calculado en tiempo real  
+
+### ✔ Checkout  
+- Formulario de datos de envío  
+- Generación de orden  
+- Estado inicial del pedido: *PENDIENTE*
+
+### ✔ Órdenes  
+- Listado de pedidos previos  
+- Ver detalle  
+- Incluye fecha, monto, dirección
+
+---
+
+# 🧩 **Tecnologías de la App Móvil**
+
+- Kotlin  
+- Jetpack Compose (Material 3)  
+- MVVM + Repository Pattern  
+- Retrofit  
+- StateFlow / MutableStateFlow  
+- Navigation Compose  
+- Android Studio Giraffe+
+
+---
+
+# 🛠️ **Próximos pasos**
+
+### Backend (API)
+- Implementar **módulo de pedidos**
+- Cambiar estados (PENDIENTE → PAGADO → ENVIADO)
+- Agregar **JWT** para autenticación segura
+- Stock dinámico y controlado
+
+### App Móvil
+- Interfaz de seguimiento de pedidos
+- Validaciones avanzadas en checkout
+- Guardar sesión con DataStore
+- Mejor manejo de errores de red
+
+---
+
+# 👤 **Autor**
 **Cristian Parra Hernández**  
-📚 Asignatura: *Desarrollo de Aplicaciones Móviles*  
+📚 Asignatura: Desarrollo de Aplicaciones Móviles  
 🏫 DuocUC – Sección 010V  
-👨‍🏫 Docente: *Luis David Becerra Uribe*  
+👨‍🏫 Docente: Luis David Becerra Uribe  
 
 ---
 
-## 📂 Repositorio
+# 💼 **Propósito del Proyecto**
+Este proyecto integra conocimientos de **bases de datos**, **backend**, **arquitectura MVVM**, **desarrollo móvil moderno**, y **consumo de APIs**.  
+Representa una solución realista que demuestra habilidades técnicas completas y una arquitectura sólida para apps comerciales modernas.
 
-> 💡 [GitHub – NovaShop E-Commerce](https://github.com/usuario/NovaShop)  
-> _(Reemplaza “usuario” por tu nombre de usuario real en GitHub)_
+---
+
