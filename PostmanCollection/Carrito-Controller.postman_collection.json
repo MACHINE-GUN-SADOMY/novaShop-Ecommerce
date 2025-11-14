@@ -1,0 +1,43 @@
+{
+	"info": {
+		"_postman_id": "6520904d-4600-4038-b7ca-b0dc2b78f223",
+		"name": "Carrito-Controller",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44411688"
+	},
+	"item": [
+		{
+			"name": "Obtener carrito",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/carrito/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"carrito",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
