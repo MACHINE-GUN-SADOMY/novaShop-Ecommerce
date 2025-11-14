@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"nombre\": \"nuevo usuario\",\r\n  \"email\": \"nuevo@correo.com\",\r\n  \"password\": \"abcd\"\r\n}",
+					"raw": "{\r\n  \"nombre\": \"nuevo usuario\",\r\n  \"email\": \"customer_example@correo.com\",\r\n  \"password\": \"abcd\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -61,6 +61,39 @@
 						"api",
 						"auth",
 						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LoginAuth Copy",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"nuevo@correo.com\",\r\n  \"password\": \"abcd\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/auth/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"auth",
+						"2"
 					]
 				}
 			},

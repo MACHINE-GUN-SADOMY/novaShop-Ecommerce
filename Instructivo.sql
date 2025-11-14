@@ -4,16 +4,18 @@ CREATE DATABASE `novaShop-ecommerce`;
 -- 2. USAR BASE DE DATOS
 USE `novaShop-ecommerce`;
 
--- 3. CREAR TABLAS
+-- 3. CREAR TABLAS Y ALTER TABLE
 CREATE TABLE usuarios (
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre      VARCHAR(100)       NOT NULL,
     email       VARCHAR(100)       NOT NULL UNIQUE,
     pasword     VARCHAR(100)       NOT NULL,
     fecha_cre   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
+ALTER TABLE usuarios ADD COLUMN rol ENUM('ADMIN', 'CUSTOMER') NOT NULL DEFAULT 'CUSTOMER';
 
 CREATE TABLE categorias(
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -95,3 +97,11 @@ INSERT INTO usuarios VALUES (
 
 -- 5. Query
 SELECT * FROM usuarios;
+SELECT * FROM productos;
+
+-- 6. Crear Usuario Admin
+UPDATE usuarios
+    SET rol = 'ADMIN'
+WHERE id = 1;
+
+SELECT * FROM usuarios WHERE id = 1;
