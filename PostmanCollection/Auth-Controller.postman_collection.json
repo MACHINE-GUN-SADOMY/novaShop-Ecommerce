@@ -67,7 +67,7 @@
 			"response": []
 		},
 		{
-			"name": "LoginAuth Copy",
+			"name": "Obtener Usuario",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},

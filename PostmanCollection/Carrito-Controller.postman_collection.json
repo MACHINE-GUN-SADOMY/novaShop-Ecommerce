@@ -24,7 +24,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/api/carrito/1",
+					"raw": "http://localhost:8081/api/carrito/2",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -33,7 +33,7 @@
 					"path": [
 						"api",
 						"carrito",
-						"1"
+						"2"
 					]
 				}
 			},
