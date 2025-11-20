@@ -30,6 +30,13 @@ public class ProductoController {
         return ResponseEntity.ok(productoService.listarTodos());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductoResponse> buscar(@PathVariable Long id) {
+        ProductoResponse producto = productoService.buscarPorId(id);
+
+        return ResponseEntity.ok(producto);
+    }
+
     @PostMapping("/crear")
     public ResponseEntity<?> crear(
             @RequestParam Long userId, @RequestBody ProductoRequest req) {

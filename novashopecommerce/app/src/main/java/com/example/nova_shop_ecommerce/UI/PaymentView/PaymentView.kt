@@ -1,122 +1,115 @@
-package com.example.novasho_ecommerce.ui.payment
+package com.example.nova_shop_ecommerce.UI
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.example.nova_shop_ecommerce.viewmodel.CartViewModel
-
+import androidx.compose.runtime.*
+import com.example.nova_shop_ecommerce.ViewModel.PaymentVM.PaymentViewModel
 
 @Composable
-fun PaymentView(
-    cartVM: CartViewModel,
-    onPaymentSuccess: () -> Unit,
-    onPaymentCancel: () -> Unit
+fun PaymentScreen(
+    usuarioId: Long,
+    carritoId: Long,
+    total: Int,
+    paymentVM: PaymentViewModel,
+    onBackToCheckout: () -> Unit,
+    onPaymentSuccess: () -> Unit
 ) {
-    var address by remember { mutableStateOf("") }
-    var commune by remember { mutableStateOf("") }
-    var city by remember { mutableStateOf("") }
-    var postalCode by remember { mutableStateOf("") }
+    val state by paymentVM.state.collectAsState()
 
-    var addressErr by remember { mutableStateOf<String?>(null) }
-    var communeErr by remember { mutableStateOf<String?>(null) }
-    var cityErr by remember { mutableStateOf<String?>(null) }
-    var postalCodeErr by remember { mutableStateOf<String?>(null) }
+    // Para navegar solo una vez cuando el pago sea exitoso
+    var hasTriggeredSuccess by remember { mutableStateOf(false) }
 
-    fun validate() {
-        addressErr = if (address.isBlank()) "Requerido" else null
-        communeErr = if (commune.isBlank()) "Requerido" else null
-        cityErr = if (city.isBlank()) "Requerido" else null
-        postalCodeErr = if (postalCode.isBlank() || postalCode.length != 5) "Código Postal inválido" else null
-    }
-
-    val isValid by remember {
-        derivedStateOf {
-            addressErr == null && communeErr == null && cityErr == null && postalCodeErr == null
+    LaunchedEffect(state.loading, state.error, state.pedido) {
+        if (!state.loading && state.error == null && state.pedido != null && !hasTriggeredSuccess) {
+            hasTriggeredSuccess = true
+            onPaymentSuccess()
         }
     }
 
     Column(
-        Modifier
+        modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(24.dp)
     ) {
-        Text("Detalles de la Dirección de Envío", style = MaterialTheme.typography.headlineMedium)
+        Text("Pago", style = MaterialTheme.typography.titleLarge)
+        Spacer(Modifier.height(16.dp))
 
-        TextField(
-            value = address,
-            onValueChange = { address = it; validate() },
+        OutlinedTextField(
+            value = state.direccion,
+            onValueChange = { paymentVM.actualizarDireccion(it) },
             label = { Text("Dirección") },
-            isError = addressErr != null,
             modifier = Modifier.fillMaxWidth()
         )
-        if (addressErr != null) {
-            Text(addressErr!!, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
-        }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(Modifier.height(8.dp))
 
-        TextField(
-            value = commune,
-            onValueChange = { commune = it; validate() },
+        OutlinedTextField(
+            value = state.comuna,
+            onValueChange = { paymentVM.actualizarComuna(it) },
             label = { Text("Comuna") },
-            isError = communeErr != null,
             modifier = Modifier.fillMaxWidth()
         )
-        if (communeErr != null) {
-            Text(communeErr!!, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
-        }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(Modifier.height(8.dp))
 
-        TextField(
-            value = city,
-            onValueChange = { city = it; validate() },
+        OutlinedTextField(
+            value = state.ciudad,
+            onValueChange = { paymentVM.actualizarCiudad(it) },
             label = { Text("Ciudad") },
-            isError = cityErr != null,
             modifier = Modifier.fillMaxWidth()
         )
-        if (cityErr != null) {
-            Text(cityErr!!, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
-        }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(Modifier.height(16.dp))
 
-        TextField(
-            value = postalCode,
-            onValueChange = { postalCode = it; validate() },
-            label = { Text("Código Postal") },
-            isError = postalCodeErr != null,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Done
-            ),
-            modifier = Modifier.fillMaxWidth()
+        Text(
+            text = "Total: $total",
+            style = MaterialTheme.typography.titleMedium
         )
-        if (postalCodeErr != null) {
-            Text(postalCodeErr!!, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+
+        Spacer(Modifier.height(24.dp))
+
+        if (state.loading) {
+            CircularProgressIndicator()
+            Spacer(Modifier.height(16.dp))
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        if (state.error != null) {
+            Text(
+                text = "Error: ${state.error}",
+                color = MaterialTheme.colorScheme.error
+            )
+            Spacer(Modifier.height(16.dp))
+        }
 
-        Button(
-            onClick = {
-                if (isValid) {
-                    onPaymentSuccess()
-                }
-            },
-            enabled = isValid,
-            modifier = Modifier.fillMaxWidth()
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("Pagar")
-        }
+            OutlinedButton(
+                onClick = onBackToCheckout,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Volver")
+            }
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(Modifier.width(8.dp))
 
-        TextButton(onClick = onPaymentCancel) {
-            Text("Cancelar")
+            Button(
+                enabled = !state.loading &&
+                        state.direccion.isNotBlank() &&
+                        state.comuna.isNotBlank() &&
+                        state.ciudad.isNotBlank(),
+                onClick = {
+                    hasTriggeredSuccess = false
+                    paymentVM.pagar(usuarioId, carritoId)
+                },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Pagar ahora")
+            }
         }
     }
 }

@@ -1,101 +1,101 @@
-package com.example.nova_shop_ecommerce.UI.Checkout
+package com.example.nova_shop_ecommerce.UI
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.nova_shop_ecommerce.Model.ShippingInfo
-import com.example.nova_shop_ecommerce.viewmodel.CartViewModel
-import com.example.nova_shop_ecommerce.viewmodel.CatalogViewModel
-import com.example.nova_shop_ecommerce.viewmodel.OrdersViewModel
+import com.example.nova_shop_ecommerce.ViewModel.CarritoVM.CarritoViewModel
 
 @Composable
 fun CheckoutView(
-    cartVM: CartViewModel,
-    ordersVM: OrdersViewModel,
-    catalogVM: CatalogViewModel,
-    onSuccess: () -> Unit,
-    onCancel: () -> Unit,
-    onGoHome: () -> Unit
+    usuarioId: Long,
+    cartVM: CarritoViewModel,
+    onConfirm: (carritoId: Long, total: Int) -> Unit,
+    onCancel: () -> Unit
 ) {
-    val items by cartVM.items.collectAsState()
-    val total = cartVM.total { id -> catalogVM.getProductById(id)?.price ?: 0.0 }
+    val state by cartVM.carritoState.collectAsState()
 
-    // Form fields
-    var address by remember { mutableStateOf("") }
-    var commune by remember { mutableStateOf("") }
-    var city by remember { mutableStateOf("") }
-    var region by remember { mutableStateOf("") }
+    LaunchedEffect(usuarioId) {
+        cartVM.cargarCarrito(usuarioId)
+    }
 
-    val formValid = address.isNotBlank() && commune.isNotBlank() && city.isNotBlank() && region.isNotBlank()
-    val cartEmpty = items.isEmpty()
+    val items = state.carrito?.items.orEmpty()
+    val total = state.carrito?.total ?: 0
+    var error by remember { mutableStateOf<String?>(null) }
 
-    Column(Modifier.fillMaxSize().padding(16.dp)) {
-        // Header
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Checkout", style = MaterialTheme.typography.titleLarge)
-            Spacer(Modifier.weight(1f))
-            TextButton(onClick = onGoHome) { Text("Menú") }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Text("Checkout", style = MaterialTheme.typography.titleLarge)
+        Spacer(Modifier.height(12.dp))
+
+        if (state.loading) {
+            CircularProgressIndicator()
+            Spacer(Modifier.height(12.dp))
+        }
+
+        if (!state.loading) {
+            if (items.isEmpty()) {
+                Text("No hay productos en el carrito")
+            } else {
+                LazyColumn(
+                    modifier = Modifier.weight(1f, fill = true),
+                    contentPadding = PaddingValues(bottom = 12.dp)
+                ) {
+                    items(items) { item ->
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 6.dp)
+                        ) {
+                            Text(item.nombreProducto, style = MaterialTheme.typography.titleMedium)
+                            Text("Cantidad: ${item.cantidad}", style = MaterialTheme.typography.bodySmall)
+                            Text("Precio unit.: S/ ${"%.2f".format(item.precioUnitario.toDouble())}", style = MaterialTheme.typography.bodySmall)
+                            Text("Subtotal: S/ ${"%.2f".format(item.subtotal.toDouble())}", style = MaterialTheme.typography.bodySmall)
+                        }
+                        Divider()
+                    }
+                }
+            }
         }
 
         Spacer(Modifier.height(8.dp))
-        Text("Total a pagar: $${"%.2f".format(total)}", style = MaterialTheme.typography.titleMedium)
-        Spacer(Modifier.height(16.dp))
-
-        if (cartEmpty) {
-            Text(
-                "Tu carrito está vacío. Agrega productos antes de continuar.",
-                color = MaterialTheme.colorScheme.error
-            )
-            Spacer(Modifier.height(12.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = onGoHome) { Text("Ir al Menú") }
-                TextButton(onClick = onCancel) { Text("Volver") }
-            }
-            return@Column
+        Row(Modifier.fillMaxWidth()) {
+            Text("Total:", style = MaterialTheme.typography.titleMedium)
+            Spacer(Modifier.weight(1f))
+            Text("S/ ${"%.2f".format(total.toDouble())}", style = MaterialTheme.typography.titleMedium)
         }
 
-        // Shipping form
-        OutlinedTextField(
-            value = address, onValueChange = { address = it },
-            label = { Text("Dirección") }, modifier = Modifier.fillMaxWidth()
-        )
-        OutlinedTextField(
-            value = commune, onValueChange = { commune = it },
-            label = { Text("Comuna") }, modifier = Modifier.fillMaxWidth()
-        )
-        OutlinedTextField(
-            value = city, onValueChange = { city = it },
-            label = { Text("Ciudad") }, modifier = Modifier.fillMaxWidth()
-        )
-        OutlinedTextField(
-            value = region, onValueChange = { region = it },
-            label = { Text("Región") }, modifier = Modifier.fillMaxWidth()
-        )
+        Spacer(Modifier.height(12.dp))
 
-        Spacer(Modifier.height(16.dp))
+        error?.let {
+            Text(it, color = MaterialTheme.colorScheme.error)
+            Spacer(Modifier.height(8.dp))
+        }
+
+        OutlinedButton(
+            onClick = onCancel,
+            modifier = Modifier.fillMaxWidth()
+        ) { Text("Volver") }
+
+        Spacer(Modifier.height(8.dp))
+
         Button(
             onClick = {
-                val shipping = ShippingInfo(address, commune, city, region)
-                ordersVM.addFromCart(
-                    cartItems = items,
-                    resolveProduct = { id -> catalogVM.getProductById(id)!! },
-                    shipping = shipping
-                )
-                cartVM.clear()
-                onSuccess()
+                if (!cartVM.hasItems()) {
+                    error = "No hay productos para pagar"
+                    return@Button
+                }
+                error = null
+                onConfirm(cartVM.getCarritoId(), cartVM.getTotal())
             },
-            enabled = formValid && !cartEmpty,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Confirmar Pedido")
-        }
-
-        Spacer(Modifier.height(8.dp))
-        TextButton(onClick = onCancel, modifier = Modifier.align(Alignment.End)) {
-            Text("Cancelar")
-        }
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !state.loading
+        ) { Text("Ir a Pagar") }
     }
 }

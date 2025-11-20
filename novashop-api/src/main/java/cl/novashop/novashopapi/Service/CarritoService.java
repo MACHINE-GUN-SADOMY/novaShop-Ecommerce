@@ -100,6 +100,13 @@ public class CarritoService {
         ProductoJpa producto = productoJpaRepository.findById(productoId)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado con id: " + productoId));
 
+        if (producto.getStock() < request.getCantidad()) {
+            throw new RuntimeException("No hay stock suficiente para este producto.");
+        }
+
+        producto.setStock(producto.getStock() - request.getCantidad());
+        productoJpaRepository.save(producto);
+
         Optional<CarritoItemJpa> itemOpt =
                 carritoItemJpa.findByCarritoIdAndProductoId(carrito.getId(), productoId);
 

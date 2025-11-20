@@ -1,42 +1,37 @@
-package com.example.nova_shop_ecommerce.ui.order
+package com.example.nova_shop_ecommerce.UI
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.nova_shop_ecommerce.viewmodel.OrdersViewModel
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import com.example.nova_shop_ecommerce.Model.PedidoResponse
+import com.example.nova_shop_ecommerce.ViewModel.PedidoVM.PedidoViewModel
 
 @Composable
 fun OrdersView(
-    ordersVM: OrdersViewModel,
+    pedidoVM: PedidoViewModel,
+    usuarioId: Long,
     onBack: () -> Unit
 ) {
-    val orders by ordersVM.orders.collectAsState()
-    val dateFormat = rememberDateFormat()
+    val state by pedidoVM.pedidoState.collectAsState()
+
+    LaunchedEffect(usuarioId) {
+        pedidoVM.obtenerPedidosUsuario(usuarioId)
+    }
 
     Column(Modifier.fillMaxSize()) {
-        // Header personalizado (sin TopAppBar)
+
         Surface(
             tonalElevation = 2.dp,
             modifier = Modifier
                 .fillMaxWidth()
-                .windowInsetsPadding(WindowInsets.statusBars) // respeta notch/status bar
+                .windowInsetsPadding(WindowInsets.statusBars)
         ) {
             Row(
                 modifier = Modifier
@@ -53,38 +48,40 @@ fun OrdersView(
             }
         }
 
-        if (orders.isEmpty()) {
-            Text(
-                "No hay órdenes disponibles",
-                modifier = Modifier.padding(16.dp),
-                style = MaterialTheme.typography.bodyLarge
-            )
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(vertical = 8.dp)
-            ) {
-                items(orders) { order ->
-                    Column(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                    ) {
-                        Text(
-                            text = "Orden #${order.id.toString().takeLast(6)}",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Text("Fecha: ${dateFormat.format(Date(order.createdAt))}")
-                        Text("Total: $${"%.2f".format(order.total)}")
-                        Text("Items: ${order.items.size}")
-                        Spacer(Modifier.height(6.dp))
-                        // Envío
-                        Text("Envío:", style = MaterialTheme.typography.labelLarge)
-                        Text("• Dirección: ${order.shipping.address}")
-                        Text("• Comuna: ${order.shipping.commune}")
-                        Text("• Ciudad: ${order.shipping.city}")
-                        Text("• Región: ${order.shipping.region}")
-                        Divider(Modifier.padding(top = 8.dp))
+        when {
+            state.loading -> {
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+
+            state.error != null -> {
+                Text(
+                    text = "Error: ${state.error}",
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+            state.listaPedidos.isEmpty() -> {
+                Text(
+                    "No hay órdenes disponibles",
+                    modifier = Modifier.padding(16.dp),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+
+            else -> {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(vertical = 8.dp)
+                ) {
+                    items(state.listaPedidos) { pedido ->
+                        PedidoItem(pedido)
                     }
                 }
             }
@@ -93,6 +90,32 @@ fun OrdersView(
 }
 
 @Composable
-private fun rememberDateFormat(): SimpleDateFormat {
-    return SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+private fun PedidoItem(pedido: PedidoResponse) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(Modifier.padding(16.dp)) {
+
+            Text("Pedido #${pedido.id}", style = MaterialTheme.typography.titleMedium)
+
+            val estadoColor = when (pedido.estado.uppercase()) {
+                "PAGADO"     -> MaterialTheme.colorScheme.primary
+                "PENDIENTE"  -> MaterialTheme.colorScheme.tertiary
+                "CANCELADO"  -> MaterialTheme.colorScheme.error
+                else         -> MaterialTheme.colorScheme.onSurfaceVariant
+            }
+
+            Text(
+                text = "Estado: ${pedido.estado}",
+                color = estadoColor
+            )
+
+            Text("Total: $${pedido.total}")
+            Text("Items: ${pedido.items.size}")
+            Text("Fecha: ${pedido.fechaCreacion}")
+        }
+    }
 }

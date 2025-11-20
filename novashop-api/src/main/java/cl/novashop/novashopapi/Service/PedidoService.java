@@ -65,7 +65,7 @@ public class PedidoService {
                 carritoItemsJpaRepository.findByCarritoId(request.getCarritoId());
 
         if (carritoItems == null || carritoItems.isEmpty()) {
-            return null;
+            throw new RuntimeException("El carrito está vacío. No se puede crear un pedido.");
         }
 
         BigDecimal total = BigDecimal.ZERO;
@@ -140,7 +140,8 @@ public class PedidoService {
 
         for (PedidoJpa pedido : pedidos) {
             List<PedidoItemsJpa> items = pedidoItemsJpaRepository.findByPedidoId(pedido.getId());
-            responses.add(buildPedidoResponse(pedido, items));
+            PedidoResponse response = buildPedidoResponse(pedido, items);
+            responses.add(response);
         }
 
         return responses;
