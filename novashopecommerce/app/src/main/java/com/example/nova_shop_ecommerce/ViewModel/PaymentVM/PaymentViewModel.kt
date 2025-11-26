@@ -2,7 +2,7 @@ package com.example.nova_shop_ecommerce.ViewModel.PaymentVM
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nova_shop_ecommerce.Model.PedidoResponse
+import com.example.nova_shop_ecommerce.Model.Order.PedidoResponse
 import com.example.nova_shop_ecommerce.Repository.PedidoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +14,8 @@ data class PaymentState(
     val pedido: PedidoResponse? = null,
     val direccion: String = "",
     val comuna: String = "",
-    val ciudad: String = ""
+    val ciudad: String = "",
+    val ubicacion: String = ""
 )
 
 class PaymentViewModel : ViewModel() {
@@ -34,6 +35,10 @@ class PaymentViewModel : ViewModel() {
 
     fun actualizarCiudad(valor: String) {
         _state.value = _state.value.copy(ciudad = valor)
+    }
+
+    fun actualizarUbicacion(valor: String) {
+        _state.value = _state.value.copy(ubicacion = valor)
     }
 
     fun pagar(usuarioId: Long, carritoId: Long) {

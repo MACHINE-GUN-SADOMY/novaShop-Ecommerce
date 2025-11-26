@@ -6,10 +6,12 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.nova_shop_ecommerce.ViewModel.UsuarioVM.AuthViewModel
+import com.example.nova_shop_ecommerce.Utils.VibrationManager
 
 @Composable
 fun LoginScreen(
@@ -18,6 +20,8 @@ fun LoginScreen(
     onGoRegister: () -> Unit
 ) {
     val state by authVM.authState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val vibrationManager = remember { VibrationManager(context) }
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -34,6 +38,7 @@ fun LoginScreen(
     LaunchedEffect(state.loginData, state.loading, state.error) {
         val userId = state.loginData?.user?.id
         if (loginRequested && !state.loading && state.error == null && userId != null) {
+            vibrationManager.vibrateSuccess()
             onLoginSuccess(userId)
             loginRequested = false
         }
@@ -76,6 +81,7 @@ fun LoginScreen(
             onClick = {
                 println("LoginScreen: onClick pressed -> $email")
                 loginRequested = true
+                vibrationManager.vibrateSuccess()
                 authVM.login(email, password)
             },
             enabled = !state.loading && email.isNotBlank() && password.isNotBlank(),
@@ -101,6 +107,7 @@ fun LoginScreen(
             Spacer(Modifier.height(8.dp))
             Button(
                 onClick = {
+                    vibrationManager.vibrateSuccess()
                     onLoginSuccess(fallbackUserId)
                     loginRequested = false
                 },
@@ -120,6 +127,8 @@ fun RegisterScreen(
     onGoLogin: () -> Unit
 ) {
     val state by authVM.authState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val vibrationManager = remember { VibrationManager(context) }
 
     var nombre by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
@@ -128,6 +137,7 @@ fun RegisterScreen(
 
     LaunchedEffect(state.registeredUser, state.loading, state.error) {
         if (registerRequested && !state.loading && state.error == null && state.registeredUser != null) {
+            vibrationManager.vibrateSuccess()
             if (onRegisterSuccessSimple != null) {
                 onRegisterSuccessSimple()
             } else {
@@ -193,6 +203,7 @@ fun RegisterScreen(
             Button(
                 onClick = {
                     registerRequested = true
+                    vibrationManager.vibrateSuccess()
                     authVM.register(nombre, email, password)
                 },
                 enabled = !state.loading &&

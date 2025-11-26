@@ -1,4 +1,6 @@
-package com.example.nova_shop_ecommerce.Model
+package com.example.nova_shop_ecommerce.Model.Order
+
+import java.time.LocalDateTime
 
 data class CrearPedidoRequest(
     val usuarioId: Long,

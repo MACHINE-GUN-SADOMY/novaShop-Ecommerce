@@ -2,7 +2,7 @@ package com.example.nova_shop_ecommerce.ViewModel.PedidoVM
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nova_shop_ecommerce.Model.PedidoResponse
+import com.example.nova_shop_ecommerce.Model.Order.PedidoResponse
 import com.example.nova_shop_ecommerce.Repository.PedidoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch

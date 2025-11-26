@@ -28,7 +28,6 @@ class AuthViewModel : ViewModel() {
     fun login(email: String, password: String) {
         viewModelScope.launch {
             try {
-                // Traza visual en el estado
                 _authState.value = _authState.value.copy(
                     loading = true,
                     error = "Enviando login..."
@@ -74,14 +73,35 @@ class AuthViewModel : ViewModel() {
     fun register(nombre: String, email: String, password: String) {
         viewModelScope.launch {
             try {
-                _authState.value = _authState.value.copy(loading = true, error = null)
+                // Traza visual en el estado
+                _authState.value = _authState.value.copy(
+                    loading = true,
+                    error = "Creando cuenta..."
+                )
+
                 val user = repo.register(nombre, email, password)
+
+                println("AuthViewModel.register() OK -> $user")
+
                 _authState.value = _authState.value.copy(
                     loading = false,
                     registeredUser = user,
                     error = null
                 )
+            } catch (e: retrofit2.HttpException) {
+                println("AuthViewModel.register() HttpException code=${e.code()} msg=${e.message()}")
+                _authState.value = _authState.value.copy(
+                    loading = false,
+                    error = if (e.code() == 400) "Email ya registrado" else "Error del servidor"
+                )
+            } catch (e: java.io.IOException) {
+                println("AuthViewModel.register() IOException $e")
+                _authState.value = _authState.value.copy(
+                    loading = false,
+                    error = "Sin conexión"
+                )
             } catch (e: Exception) {
+                e.printStackTrace()
                 _authState.value = _authState.value.copy(
                     loading = false,
                     error = e.message ?: "Error al registrar"

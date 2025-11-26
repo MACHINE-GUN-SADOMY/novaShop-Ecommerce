@@ -6,7 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import com.example.nova_shop_ecommerce.ViewModel.PaymentVM.PaymentViewModel
+import com.example.nova_shop_ecommerce.Utils.LocationManager
+import com.example.nova_shop_ecommerce.Utils.VibrationManager
 
 @Composable
 fun PaymentScreen(
@@ -17,14 +20,18 @@ fun PaymentScreen(
     onBackToCheckout: () -> Unit,
     onPaymentSuccess: () -> Unit
 ) {
-    val state by paymentVM.state.collectAsState()
 
-    // Para navegar solo una vez cuando el pago sea exitoso
+    val state by paymentVM.state.collectAsState()
+    val context = LocalContext.current
+    val locationManager = remember { LocationManager(context) }
+    val vibrationManager = remember { VibrationManager(context) }
+
     var hasTriggeredSuccess by remember { mutableStateOf(false) }
 
     LaunchedEffect(state.loading, state.error, state.pedido) {
         if (!state.loading && state.error == null && state.pedido != null && !hasTriggeredSuccess) {
             hasTriggeredSuccess = true
+            vibrationManager.vibrateSuccess()
             onPaymentSuccess()
         }
     }
@@ -64,8 +71,36 @@ fun PaymentScreen(
 
         Spacer(Modifier.height(16.dp))
 
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            OutlinedTextField(
+                value = state.ubicacion,
+                onValueChange = { paymentVM.actualizarUbicacion(it) },
+                label = { Text("Ubicación GPS") },
+                readOnly = true,
+                modifier = Modifier.weight(1f)
+            )
+
+            Button(
+                onClick = {
+                    if (locationManager.hasLocationPermission()) {
+                        locationManager.updateLocation()
+                        paymentVM.actualizarUbicacion(locationManager.getLocationString())
+                    } else {
+                        paymentVM.actualizarUbicacion("Permiso de ubicación requerido")
+                    }
+                }
+            ) {
+                Text("GPS")
+            }
+        }
+
+        Spacer(Modifier.height(16.dp))
+
         Text(
-            text = "Total: $total",
+            text = "Total: CLP $total",
             style = MaterialTheme.typography.titleMedium
         )
 
@@ -104,6 +139,7 @@ fun PaymentScreen(
                         state.ciudad.isNotBlank(),
                 onClick = {
                     hasTriggeredSuccess = false
+                    vibrationManager.vibratePayment()
                     paymentVM.pagar(usuarioId, carritoId)
                 },
                 modifier = Modifier.weight(1f)

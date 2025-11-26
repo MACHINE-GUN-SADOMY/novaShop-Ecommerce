@@ -5,8 +5,6 @@ import com.example.nova_shop_ecommerce.Model.Usuario.LoginResponse
 import com.example.nova_shop_ecommerce.Model.Usuario.RegisterRequest
 import com.example.nova_shop_ecommerce.Model.Usuario.UsuarioResponse
 import com.example.nova_shop_ecommerce.ViewModel.ApiClient
-
-
 class AuthRepository {
     private val api = ApiClient.api
 

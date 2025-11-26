@@ -1,4 +1,4 @@
-package com.example.nova_shop_ecommerce.UI
+package com.example.nova_shop_ecommerce.UI.Order
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,7 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.nova_shop_ecommerce.Model.PedidoResponse
+import com.example.nova_shop_ecommerce.Model.Order.PedidoResponse
 import com.example.nova_shop_ecommerce.ViewModel.PedidoVM.PedidoViewModel
 
 @Composable
@@ -102,10 +102,10 @@ private fun PedidoItem(pedido: PedidoResponse) {
             Text("Pedido #${pedido.id}", style = MaterialTheme.typography.titleMedium)
 
             val estadoColor = when (pedido.estado.uppercase()) {
-                "PAGADO"     -> MaterialTheme.colorScheme.primary
+                "PAGADO"    -> MaterialTheme.colorScheme.primary
                 "PENDIENTE"  -> MaterialTheme.colorScheme.tertiary
                 "CANCELADO"  -> MaterialTheme.colorScheme.error
-                else         -> MaterialTheme.colorScheme.onSurfaceVariant
+                else    -> MaterialTheme.colorScheme.onSurfaceVariant
             }
 
             Text(
@@ -113,9 +113,11 @@ private fun PedidoItem(pedido: PedidoResponse) {
                 color = estadoColor
             )
 
+            Text("Cantidad de Productos: ${pedido.items.size}")
+            Text("Fecha: ${pedido.fechaCreacion ?: "No disponible"}")
+            Text("Domicilio: ${pedido.direccionEnvio}")
+
             Text("Total: $${pedido.total}")
-            Text("Items: ${pedido.items.size}")
-            Text("Fecha: ${pedido.fechaCreacion}")
         }
     }
 }

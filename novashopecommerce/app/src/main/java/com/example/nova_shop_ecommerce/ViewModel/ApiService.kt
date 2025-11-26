@@ -3,8 +3,8 @@ package com.example.nova_shop_ecommerce.ViewModel
 import com.example.nova_shop_ecommerce.Model.CarritoModel.CarritoItemRequest
 import com.example.nova_shop_ecommerce.Model.CarritoModel.CarritoResponse
 import com.example.nova_shop_ecommerce.Model.CarritoModel.UpdateCantidadRequest
-import com.example.nova_shop_ecommerce.Model.CrearPedidoRequest
-import com.example.nova_shop_ecommerce.Model.PedidoResponse
+import com.example.nova_shop_ecommerce.Model.Order.CrearPedidoRequest
+import com.example.nova_shop_ecommerce.Model.Order.PedidoResponse
 import com.example.nova_shop_ecommerce.Model.ProductoResponse
 import com.example.nova_shop_ecommerce.Model.Usuario.LoginRequest
 import com.example.nova_shop_ecommerce.Model.Usuario.LoginResponse

@@ -1,7 +1,7 @@
 package com.example.nova_shop_ecommerce.Repository
 
-import com.example.nova_shop_ecommerce.Model.CrearPedidoRequest
-import com.example.nova_shop_ecommerce.Model.PedidoResponse
+import com.example.nova_shop_ecommerce.Model.Order.CrearPedidoRequest
+import com.example.nova_shop_ecommerce.Model.Order.PedidoResponse
 import com.example.nova_shop_ecommerce.ViewModel.ApiClient
 
 

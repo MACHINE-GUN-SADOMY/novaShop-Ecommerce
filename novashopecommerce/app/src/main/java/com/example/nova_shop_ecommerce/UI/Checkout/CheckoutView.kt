@@ -68,7 +68,7 @@ fun CheckoutView(
         Row(Modifier.fillMaxWidth()) {
             Text("Total:", style = MaterialTheme.typography.titleMedium)
             Spacer(Modifier.weight(1f))
-            Text("S/ ${"%.2f".format(total.toDouble())}", style = MaterialTheme.typography.titleMedium)
+            Text("CLP / ${"%.2f".format(total.toDouble())}", style = MaterialTheme.typography.titleMedium)
         }
 
         Spacer(Modifier.height(12.dp))
@@ -79,7 +79,10 @@ fun CheckoutView(
         }
 
         OutlinedButton(
-            onClick = onCancel,
+            onClick = {
+                println("Botón Volver presionado")
+                onCancel()
+            },
             modifier = Modifier.fillMaxWidth()
         ) { Text("Volver") }
 
