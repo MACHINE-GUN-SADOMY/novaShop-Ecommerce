@@ -8,8 +8,6 @@ import com.example.nova_shop_ecommerce.Model.Usuario.UsuarioResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.io.IOException
 
 data class AuthState(
     val loading: Boolean = false,
@@ -72,7 +70,6 @@ class AuthViewModel : ViewModel() {
     fun register(nombre: String, email: String, password: String) {
         viewModelScope.launch {
             try {
-                // Traza visual en el estado
                 _authState.value = _authState.value.copy(
                     loading = true,
                     error = "Creando cuenta..."

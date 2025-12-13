@@ -79,8 +79,6 @@ fun NovaShopApp() {
             )
         }
 
-
-
         // CATALOG
         composable("catalog") {
             val uid = usuarioId ?: run {
