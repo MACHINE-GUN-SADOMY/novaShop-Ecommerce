@@ -1,6 +1,6 @@
 package com.example.nova_shop_ecommerce.Repository
 
-import com.example.nova_shop_ecommerce.Model.ProductoResponse
+import com.example.nova_shop_ecommerce.Model.Producto.ProductoResponse
 import com.example.nova_shop_ecommerce.ViewModel.ApiClient
 
 

@@ -19,7 +19,6 @@ data class AuthState(
 )
 
 class AuthViewModel : ViewModel() {
-
     private val repo = AuthRepository()
 
     private val _authState = MutableStateFlow(AuthState())

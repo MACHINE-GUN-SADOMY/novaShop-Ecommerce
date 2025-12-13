@@ -5,7 +5,8 @@ import com.example.nova_shop_ecommerce.Model.CarritoModel.CarritoResponse
 import com.example.nova_shop_ecommerce.Model.CarritoModel.UpdateCantidadRequest
 import com.example.nova_shop_ecommerce.Model.Order.CrearPedidoRequest
 import com.example.nova_shop_ecommerce.Model.Order.PedidoResponse
-import com.example.nova_shop_ecommerce.Model.ProductoResponse
+import com.example.nova_shop_ecommerce.Model.Producto.ProductoRequest
+import com.example.nova_shop_ecommerce.Model.Producto.ProductoResponse
 import com.example.nova_shop_ecommerce.Model.Usuario.LoginRequest
 import com.example.nova_shop_ecommerce.Model.Usuario.LoginResponse
 import com.example.nova_shop_ecommerce.Model.Usuario.RegisterRequest
@@ -16,6 +17,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
     // ---------------------------
@@ -38,7 +40,6 @@ interface ApiService {
 
     @GET("productos/{id}")
     suspend fun getProducto(@Path("id") id: Long): ProductoResponse
-
 
     // ---------------------------
     //          CARRITO

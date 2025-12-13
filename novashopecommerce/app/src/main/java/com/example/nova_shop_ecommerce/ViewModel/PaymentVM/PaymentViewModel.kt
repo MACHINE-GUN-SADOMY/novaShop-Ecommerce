@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nova_shop_ecommerce.Model.Order.PedidoResponse
 import com.example.nova_shop_ecommerce.Repository.PedidoRepository
+import com.example.nova_shop_ecommerce.Utils.LocationManager.AddressInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -39,6 +40,15 @@ class PaymentViewModel : ViewModel() {
 
     fun actualizarUbicacion(valor: String) {
         _state.value = _state.value.copy(ubicacion = valor)
+    }
+
+    fun actualizarDireccionCompleta(addressInfo: AddressInfo) {
+        _state.value = _state.value.copy(
+            direccion = addressInfo.direccion,
+            comuna = addressInfo.comuna,
+            ciudad = addressInfo.ciudad,
+            ubicacion = "${addressInfo.direccion}, ${addressInfo.comuna}, ${addressInfo.ciudad}"
+        )
     }
 
     fun pagar(usuarioId: Long, carritoId: Long) {

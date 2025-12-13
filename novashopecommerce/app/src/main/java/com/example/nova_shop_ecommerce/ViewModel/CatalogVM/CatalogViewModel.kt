@@ -2,7 +2,7 @@ package com.example.nova_shop_ecommerce.ViewModel.CatalogVM
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nova_shop_ecommerce.Model.ProductoResponse
+import com.example.nova_shop_ecommerce.Model.Producto.ProductoResponse
 import com.example.nova_shop_ecommerce.Repository.CatalogRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
